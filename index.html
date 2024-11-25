@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InspiraImage: Transform Your Text into Vibrant Visuals</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow-x: hidden;
+            color: #333;
+        }
+        .container {
+            display: flex;
+            flex: 1;
+            overflow-y: auto;
+        }
+        .left-section {
+            flex: 0 0 30%;
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            text-align: center;
+            border-right: 2px solid #fff;
+            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .right-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #9fbaa7, #ffe4e1);
+            border-radius: 10px;
+            overflow-y: auto;
+        }
+        .top-half, .bottom-half {
+            flex: 1;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+        #input-form {
+            margin-bottom: 20px;
+            text-align: center;
+            background: rgba(124, 251, 251, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+        }
+        #input-form input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            margin-bottom: 10px;
+        }
+        #input-form button {
+            padding: 10px 20px;
+            border-radius: 20px;  /* Rounded edges */
+            border: none;
+            background-color: #0066ff;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        #input-form button:hover {
+            background-color: #0051cc;
+            transform: scale(1.05);
+        }
+        #input-form button.pressed {
+            background-color: #ff5733;
+            color: #fff;
+            border: none;
+            cursor: not-allowed;
+        }
+        #generated-image {
+            text-align: center;
+            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            border-radius: 10px;
+            width: 100%;
+            max-height: 400px;
+            overflow: hidden;
+        }
+        #generated-image img {
+            max-width: 100%;
+            max-height: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+        #download-btn {
+            margin-top: 10px;
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            background-color: #28a745;
+            color: #fff;
+            cursor: pointer;
+            animation: fadeIn 2s;
+        }
+        #progress-bar {
+            width: 80%;
+            height: 20px;
+            background-color: #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        #progress-bar-inner {
+            width: 0;
+            height: 100%;
+            background-color: #0066ff;
+            text-align: center;
+            line-height: 20px;
+            color: white;
+            border-radius: 10px;
+        }
+        .color-picker {
+            display: inline-block;
+            margin-right: 5px;
+            cursor: pointer;
+            width: 20px;
+            height: 20px;
+            border: 1px solid #fff;
+            border-radius: 50%;
+        }
+        #selected-text-container {
+            margin-top: 10px;
+        }
+        #selected-text-container span {
+            cursor: pointer;
+        }
+        .fade-in {
+            animation: fadeIn 2s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .animated-background {
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+            background-size: 300% 300%;
+            animation: gradientAnimation 10s ease infinite;
+        }
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+                .example-images {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+        .example-images img {
+            width: 80px;
+            height: 80px;
+            border-radius: 10px;
+            object-fit: cover;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .header {
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        .header p {
+            font-size: 1.2em;
+            margin-top: 10px;
+            color: #fff;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+        .description {
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        .description h2 {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+        .description p {
+            font-size: 1em;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left-section animated-background">
+            <div class="header">
+                <h1>InspiraImage: Transform Your Text into Vibrant Visuals</h1>
+                <p>Bring your words to life with stunning visuals!</p>
+            </div>
+            <div class="example-images">
+                <img src="https://th.bing.com/th/id/OIP.J1M18PXrYX89EKZ6Q8JnFgHaEo?w=273&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7" alt="Abstract Art 1">
+                <img src="https://th.bing.com/th/id/OIP.fIl1TAhT-SQ-oURWe31wCQHaE8?w=277&h=185&c=7&r=0&o=5&dpr=1.3&pid=1.7" alt="Nature Landscape">
+                <img src="https://as1.ftcdn.net/v2/jpg/05/68/67/80/1000_F_568678027_YqI7DAA2SNxtkaNWjfwYrffQS1HAeEJ4.jpg" alt="Urban Cityscape">
+                <img src="https://th.bing.com/th/id/OIP.x9Fdi5faKlrC0vwbcob31AHaE7?w=230&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7" alt="Geometric Pattern">
+                <img src="https://miro.medium.com/v2/resize:fit:648/1*a9FjfbymS4EYHyUYX1kfNg.jpeg" alt="Inspirational Quote">
+            </div>
+            <div class="description">
+                <h2>How it Works</h2>
+                <p>1. Enter your text in the input field.</p>
+                <p>2. Click on individual words to select colors using the color picker.</p>
+                <p>3. Click "Generate Image" to create a visual representation of your text.</p>
+                <p>4. Download the generated image by clicking the "Download Image" button.</p>
+            </div>
+        </div>
+        <div class="right-section">
+            <div class="top-half">
+                <div id="input-form">
+                    <h2>Enter Your Text</h2>
+                    <input type="text" id="text-input" name="text-input" required>
+                    <div id="color-picker-container">
+                        <input type="color" id="color-picker" title="Choose a color">
+                    </div>
+                    <div id="selected-text-container"></div>
+                    <button type="button" id="generate-btn">Generate Image</button>
+                    <div id="progress-bar">
+                        <div id="progress-bar-inner">0%</div>
+                    </div>
+                </div>
+            </div>
+            <div class="bottom-half">
+                <div id="generated-image" class="fade-in"></div>
+                <button id="download-btn" class="fade-in" style="display:none;">Download Image</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const textInput = document.getElementById('text-input');
+        const colorPicker = document.getElementById('color-picker');
+        const selectedTextContainer = document.getElementById('selected-text-container');
+        const generatedImageContainer = document.getElementById('generated-image');
+        const downloadBtn = document.getElementById('download-btn');
+        const generateBtn = document.getElementById('generate-btn');
+        const progressBar = document.getElementById('progress-bar');
+        const progressBarInner = document.getElementById('progress-bar-inner');
+        let coloredWords = {};
+
+        textInput.addEventListener('input', function() {
+            selectedTextContainer.innerHTML = '';
+            const words = textInput.value.split(' ');
+            words.forEach(word => {
+                const span = document.createElement('span');
+                span.textContent = word + ' ';
+                span.classList.add('selectable-text');
+                                span.addEventListener('click', function() {
+                    colorPicker.click();
+                    colorPicker.oninput = function() {
+                        const color = colorPicker.value;
+                        span.style.color = color;
+                        coloredWords[word] = color;
+                    };
+                });
+                selectedTextContainer.appendChild(span);
+            });
+        });
+
+        document.getElementById('generate-btn').addEventListener('click', function() {
+            generateBtn.classList.add('pressed');  // Add pressed class
+            generateBtn.disabled = true;  // Disable the button
+
+            const text = textInput.value;
+            console.log('Sending request to http://localhost:5000/generate_image with text:', text);
+            fetch('http://localhost:5000/generate_image', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ text: text, colored_words: coloredWords })
+            })
+            .then(response => {
+                console.log('Received response from /generate_image:', response);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Data received:', data);
+                if (data.image) {
+                    const imgElement = document.createElement('img');
+                    imgElement.src = 'data:image/png;base64,' + data.image;
+                    generatedImageContainer.innerHTML = '';
+                    generatedImageContainer.appendChild(imgElement);
+                    downloadBtn.style.display = 'block';
+
+                    // Enable download button
+                    downloadBtn.onclick = () => {
+                        const link = document.createElement('a');
+                        link.href = imgElement.src;
+                        link.download = 'generated_image.png';
+                        link.click();
+                    };
+                } else {
+                    console.error('Image generation error:', data.error);
+                    generatedImageContainer.innerHTML = 'Error generating image: ' + data.error;
+                    downloadBtn.style.display = 'none';
+                }
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+                generatedImageContainer.innerHTML = 'Error generating image: ' + error.message;
+                downloadBtn.style.display = 'none';
+            })
+            .finally(() => {
+                generateBtn.classList.remove('pressed');  // Remove pressed class after processing
+                generateBtn.disabled = false;  // Enable the button
+            });
+
+            // Simulate progress bar
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 0.5;
+                progressBarInner.style.width = `${progress}%`;
+                progressBarInner.textContent = `${progress}%`;
+                if (progress >= 100) {
+                    clearInterval(interval);
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
