@@ -337,7 +337,7 @@
             // Simulate progress bar
             let progress = 0;
             const interval = setInterval(() => {
-                progress += 0.5;
+                progress += 0.25;
                 progressBarInner.style.width = `${progress}%`;
                 progressBarInner.textContent = `${progress}%`;
                 if (progress >= 100) {
