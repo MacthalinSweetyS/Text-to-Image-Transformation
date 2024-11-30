@@ -1,3 +1,6 @@
+!pip install torch diffusers flask flask-cors pillow
+
+
 import torch
 from diffusers import StableDiffusionPipeline
 from flask import Flask, request, jsonify
